@@ -22,5 +22,5 @@ func HandleStuff(ctx context.Context, getter Getter) (Object, external.External,
 		return Object{}, external.External{}, err
 	}
 
-	return object, ext, nil
+	return object, *ext, nil
 }

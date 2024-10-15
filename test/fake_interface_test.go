@@ -51,7 +51,7 @@ func TestFake(t *testing.T) {
 		fakeGetter := fake.NewFakeGetter(t)
 
 		fakeGetter.On.Get("").Return(fake.Object{}, nil)
-		fakeGetter.On.GetExternal(0).Return(external.External{}, nil)
+		fakeGetter.On.GetExternal(0).Return(&external.External{}, nil)
 
 		_, _, err := fake.HandleStuff(context.TODO(), fakeGetter)
 		check.ErrorNil(t, err)
