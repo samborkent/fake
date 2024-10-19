@@ -1,10 +1,14 @@
 package iface
 
-import "strings"
+import (
+	"go/ast"
+	"strings"
+)
 
 type Interface struct {
 	Name    string
 	Methods []Method
+	AST     *ast.InterfaceType
 }
 
 func (i Interface) String() string {
@@ -64,9 +68,11 @@ type Method struct {
 	Name       string
 	Parameters []Variable
 	Results    []Variable
+	AST        *ast.FuncType
 }
 
 type Variable struct {
 	Name string
 	Type string
+	AST  ast.Expr
 }

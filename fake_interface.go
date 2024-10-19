@@ -6,16 +6,6 @@ import (
 	"github.com/samborkent/fake/external"
 )
 
-type getterGet struct {
-	id      string
-	returns *getterGetReturn
-}
-
-type getterGetReturn struct {
-	object Object
-	err    error
-}
-
 func (f *getterGet) Return(object Object, err error) {
 	if f == nil {
 		return

@@ -27,6 +27,7 @@ func GetInterfaces(file *ast.File) []Interface {
 			foundInterface := Interface{
 				Name:    node.Name.String(),
 				Methods: make([]Method, 0, len(interfaceType.Methods.List)),
+				AST:     interfaceType,
 			}
 
 			for _, method := range interfaceType.Methods.List {
@@ -51,6 +52,7 @@ func GetInterfaces(file *ast.File) []Interface {
 
 				foundMethod := Method{
 					Name: methodNames,
+					AST:  functionType,
 				}
 
 				if functionType.Params != nil {
@@ -97,12 +99,14 @@ func GetInterfaces(file *ast.File) []Interface {
 							foundMethod.Parameters = append(foundMethod.Parameters, Variable{
 								Name: deduceVarName(paramsType),
 								Type: paramsType,
+								AST:  param.Type,
 							})
 						} else {
 							for _, paramName := range paramVars {
 								foundMethod.Parameters = append(foundMethod.Parameters, Variable{
 									Name: paramName,
 									Type: paramsType,
+									AST:  param.Type,
 								})
 							}
 						}
@@ -153,12 +157,14 @@ func GetInterfaces(file *ast.File) []Interface {
 							foundMethod.Results = append(foundMethod.Results, Variable{
 								Name: deduceVarName(resultsType),
 								Type: resultsType,
+								AST:  result.Type,
 							})
 						} else {
 							for _, resultName := range resultVars {
 								foundMethod.Results = append(foundMethod.Results, Variable{
 									Name: resultName,
 									Type: resultsType,
+									AST:  result.Type,
 								})
 							}
 						}

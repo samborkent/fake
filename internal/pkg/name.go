@@ -4,7 +4,7 @@ import (
 	"go/ast"
 )
 
-func GetPackageName(file *ast.File) string {
+func Name(file *ast.File) string {
 	var packageName string
 
 	ast.Inspect(file, func(n ast.Node) bool {
