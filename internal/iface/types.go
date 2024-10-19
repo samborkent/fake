@@ -3,12 +3,46 @@ package iface
 import (
 	"go/ast"
 	"strings"
+
+	"github.com/samborkent/fake/internal/cases"
+)
+
+const (
+	counterSuffix  = "Counter"
+	expecterSuffix = "Expect"
+	fakePrefix     = "fake"
+	returnSuffix   = "Return"
 )
 
 type Interface struct {
 	Name    string
 	Methods []Method
 	AST     *ast.InterfaceType
+}
+
+type Method struct {
+	Name       string
+	Parameters []Variable
+	Results    []Variable
+	AST        *ast.FuncType
+}
+
+func (m Method) CounterName() string {
+	return cases.Camel(m.Name) + counterSuffix
+}
+
+func (m Method) ExpecterName(interfaceName string) string {
+	return cases.Camel(interfaceName) + m.Name
+}
+
+func (m Method) ReturnName(interfaceName string) string {
+	return m.ExpecterName(interfaceName) + returnSuffix
+}
+
+type Variable struct {
+	Name string
+	Type string
+	AST  ast.Expr
 }
 
 func (i Interface) String() string {
@@ -64,15 +98,10 @@ func (i Interface) String() string {
 	return builder.String()
 }
 
-type Method struct {
-	Name       string
-	Parameters []Variable
-	Results    []Variable
-	AST        *ast.FuncType
+func (i Interface) ExpecterName() string {
+	return cases.Camel(i.Name) + expecterSuffix
 }
 
-type Variable struct {
-	Name string
-	Type string
-	AST  ast.Expr
+func (i Interface) FakeName() string {
+	return fakePrefix + i.Name
 }

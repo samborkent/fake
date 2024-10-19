@@ -1,6 +1,11 @@
 package fake
 
-import "testing"
+import (
+	"context"
+	"fmt"
+
+	"github.com/samborkent/fake/external"
+)
 
 var _ Back = &fakeBack{}
 
@@ -19,4 +24,13 @@ type backExpect struct {
 
 const backName = "Back"
 
-type backGet struct{}
+func (f *backExpect) Get() *backGet {
+	if f == nil {
+		return nil
+	}
+	f.get = append(f.get, &backGet{})
+	return f.get[len(f.get)-1]
+}
+
+type backGet struct {
+}

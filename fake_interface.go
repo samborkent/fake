@@ -52,7 +52,7 @@ func (f *fakeGetter) GetExternal(ctx context.Context, externalID int) (*external
 
 	f.On.getExternalCounter++
 
-	return f.On.getExternal[index].returns.externalExternal,
+	return f.On.getExternal[index].returns.object,
 		f.On.getExternal[index].returns.err
 }
 
@@ -68,23 +68,13 @@ func (e *getterExpect) GetExternal(externalID int) *getterGetExternal {
 	return e.getExternal[len(e.getExternal)-1]
 }
 
-type getterGetExternal struct {
-	externalID int
-	returns    *getterGetExternalReturn
-}
-
-type getterGetExternalReturn struct {
-	externalExternal *external.External
-	err              error
-}
-
 func (f *getterGetExternal) Return(externalExternal *external.External, err error) {
 	if f == nil {
 		return
 	}
 
 	f.returns = &getterGetExternalReturn{
-		externalExternal: externalExternal,
-		err:              err,
+		object: externalExternal,
+		err:    err,
 	}
 }
