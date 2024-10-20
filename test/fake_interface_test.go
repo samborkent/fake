@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/samborkent/check"
-	"github.com/samborkent/fake"
 	"github.com/samborkent/fake/external"
+	fake "github.com/samborkent/fake/gen"
 )
 
 func TestFake(t *testing.T) {
