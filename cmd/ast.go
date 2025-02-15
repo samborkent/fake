@@ -107,7 +107,7 @@ func main() {
 											Kind:  token.STRING,
 											Value: `"fake: '%s.%s': %s"`,
 										},
-										&ast.Ident{Name: "getterName"},
+										&ast.Ident{Name: cases.Camel(intface.Name) + "Name"},
 										&ast.Ident{Name: "methodName"},
 										&ast.CallExpr{
 											Fun: &ast.SelectorExpr{
@@ -147,7 +147,7 @@ func main() {
 											Kind:  token.STRING,
 											Value: `"fake: '%s.%s': %s"`,
 										},
-										&ast.Ident{Name: "getterName"},
+										&ast.Ident{Name: cases.Camel(intface.Name) + "Name"},
 										&ast.Ident{Name: "methodName"},
 										&ast.CallExpr{
 											Fun: &ast.SelectorExpr{
@@ -194,7 +194,7 @@ func main() {
 											Kind:  token.STRING,
 											Value: `"fake: '%s.%s': %s: '%s': got '%+v', want '%+v'"`,
 										},
-										&ast.Ident{Name: "getterName"},
+										&ast.Ident{Name: cases.Camel(intface.Name) + "Name"},
 										&ast.Ident{Name: "methodName"},
 										&ast.CallExpr{
 											Fun: &ast.SelectorExpr{
@@ -341,7 +341,7 @@ func main() {
 											Kind:  token.STRING,
 											Value: `"fake: '%s.%s': %s"`,
 										},
-										&ast.Ident{Name: "getterName"},
+										&ast.Ident{Name: cases.Camel(intface.Name) + "Name"},
 										&ast.Ident{Name: "methodName"},
 										&ast.CallExpr{
 											Fun: &ast.SelectorExpr{
@@ -401,10 +401,19 @@ func main() {
 									Args: []ast.Expr{
 										&ast.BasicLit{
 											Kind:  token.STRING,
-											Value: `"fake: '%s.%s': expectations missing: called '%d' time(s), '%d' expectation(s) registered"`,
+											Value: `"fake: '%s.%s': %s: called '%d' time(s), '%d' expectation(s) registered"`,
 										},
 										&ast.Ident{Name: cases.Camel(intface.Name) + "Name"},
 										&ast.Ident{Name: "methodName"},
+										&ast.CallExpr{
+											Fun: &ast.SelectorExpr{
+												X: &ast.SelectorExpr{
+													X:   &ast.Ident{Name: "fake"},
+													Sel: &ast.Ident{Name: "ErrExpectationsMissing"},
+												},
+												Sel: &ast.Ident{Name: "Error"},
+											},
+										},
 										&ast.BinaryExpr{
 											Op: token.ADD,
 											X:  &ast.Ident{Name: indexVar},
@@ -459,7 +468,7 @@ func main() {
 										Kind:  token.STRING,
 										Value: `"fake: '%s.%s': %s: '%d'"`,
 									},
-									&ast.Ident{Name: "getterName"},
+									&ast.Ident{Name: cases.Camel(intface.Name) + "Name"},
 									&ast.Ident{Name: "methodName"},
 									&ast.CallExpr{
 										Fun: &ast.SelectorExpr{
@@ -634,7 +643,7 @@ func main() {
 		}
 
 		gofumptformat.File(fileSet, astFile, gofumptformat.Options{
-			LangVersion: "go1.23.2",
+			LangVersion: "go1.24.0",
 			ModulePath:  "github.com/samborkent/fake",
 			ExtraRules:  true,
 		})

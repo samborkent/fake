@@ -1,4 +1,4 @@
-package fake
+package fakes
 
 import (
 	"context"
@@ -42,7 +42,7 @@ func (f *fakeGetter) Get(ctx context.Context, id string) (Object Object, err err
 	}
 	index := f.On.getCounter
 	if index+1 > len(f.On.get) {
-		f.t.Fatalf("fake: '%s.%s': expectations missing: called '%d' time(s), '%d' expectation(s) registered", getterName, methodName, index+1, len(f.On.get))
+		f.t.Fatalf("fake: '%s.%s': %s: called '%d' time(s), '%d' expectation(s) registered", getterName, methodName, fake.ErrExpectationsMissing.Error(), index+1, len(f.On.get))
 	}
 	if ctx == nil {
 		f.t.Fatalf("fake: '%s.%s': %s", getterName, methodName, fake.ErrContextNil.Error())
@@ -59,7 +59,6 @@ func (f *fakeGetter) Get(ctx context.Context, id string) (Object Object, err err
 	f.On.getCounter++
 	return f.On.get[index].returns.object, f.On.get[index].returns.err
 }
-
 func (f *getterExpect) Get(id string) *getterGet {
 	if f == nil {
 		return nil
@@ -83,7 +82,6 @@ func (f *getterGet) Return(object Object, err error) {
 	}
 	f.returns = &getterGetReturn{object: object, err: err}
 }
-
 func (f *fakeGetter) Put(object external.External) {
 	if f == nil || f.t == nil {
 		panic("fake: " + fake.ErrFakeNotInitialized.Error())
@@ -94,7 +92,7 @@ func (f *fakeGetter) Put(object external.External) {
 	}
 	index := f.On.putCounter
 	if index+1 > len(f.On.put) {
-		f.t.Fatalf("fake: '%s.%s': expectations missing: called '%d' time(s), '%d' expectation(s) registered", getterName, methodName, index+1, len(f.On.put))
+		f.t.Fatalf("fake: '%s.%s': %s: called '%d' time(s), '%d' expectation(s) registered", getterName, methodName, fake.ErrExpectationsMissing.Error(), index+1, len(f.On.put))
 	}
 	if !reflect.DeepEqual(object, f.On.put[index].object) {
 		f.t.Fatalf("fake: '%s.%s': %s: '%s': got '%+v', want '%+v'", getterName, methodName, fake.ErrArgumentMismatch.Error(), "object", object, f.On.put[index].object)
@@ -102,7 +100,6 @@ func (f *fakeGetter) Put(object external.External) {
 	f.On.putCounter++
 	return
 }
-
 func (f *getterExpect) Put(object external.External) *getterPut {
 	if f == nil {
 		return nil
@@ -125,7 +122,7 @@ func (f *fakeGetter) Update(object *external.External) {
 	}
 	index := f.On.updateCounter
 	if index+1 > len(f.On.update) {
-		f.t.Fatalf("fake: '%s.%s': expectations missing: called '%d' time(s), '%d' expectation(s) registered", getterName, methodName, index+1, len(f.On.update))
+		f.t.Fatalf("fake: '%s.%s': %s: called '%d' time(s), '%d' expectation(s) registered", getterName, methodName, fake.ErrExpectationsMissing.Error(), index+1, len(f.On.update))
 	}
 	if !reflect.DeepEqual(object, f.On.update[index].object) {
 		f.t.Fatalf("fake: '%s.%s': %s: '%s': got '%+v', want '%+v'", getterName, methodName, fake.ErrArgumentMismatch.Error(), "object", object, f.On.update[index].object)
@@ -133,7 +130,6 @@ func (f *fakeGetter) Update(object *external.External) {
 	f.On.updateCounter++
 	return
 }
-
 func (f *getterExpect) Update(object *external.External) *getterUpdate {
 	if f == nil {
 		return nil
@@ -156,7 +152,7 @@ func (f *fakeGetter) GetExternal(ctx context.Context, externalID int) (object *e
 	}
 	index := f.On.getExternalCounter
 	if index+1 > len(f.On.getExternal) {
-		f.t.Fatalf("fake: '%s.%s': expectations missing: called '%d' time(s), '%d' expectation(s) registered", getterName, methodName, index+1, len(f.On.getExternal))
+		f.t.Fatalf("fake: '%s.%s': %s: called '%d' time(s), '%d' expectation(s) registered", getterName, methodName, fake.ErrExpectationsMissing.Error(), index+1, len(f.On.getExternal))
 	}
 	if ctx == nil {
 		f.t.Fatalf("fake: '%s.%s': %s", getterName, methodName, fake.ErrContextNil.Error())
@@ -173,7 +169,6 @@ func (f *fakeGetter) GetExternal(ctx context.Context, externalID int) (object *e
 	f.On.getExternalCounter++
 	return f.On.getExternal[index].returns.object, f.On.getExternal[index].returns.err
 }
-
 func (f *getterExpect) GetExternal(externalID int) *getterGetExternal {
 	if f == nil {
 		return nil

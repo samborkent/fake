@@ -1,4 +1,4 @@
-package fake
+package fakes
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	ID         = "id"
+	ID         = "testID"
 	ExternalID = 1
 )
 

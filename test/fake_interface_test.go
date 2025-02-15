@@ -6,54 +6,85 @@ import (
 
 	"github.com/samborkent/check"
 	"github.com/samborkent/fake/external"
-	fake "github.com/samborkent/fake/gen"
+	fakes "github.com/samborkent/fake/gen"
 )
 
 func TestFake(t *testing.T) {
+	t.Parallel()
+
+	t.Run("missing expectations", func(t *testing.T) {
+		t.Parallel()
+
+		_, _, _ = fakes.HandleStuff(t.Context(), fakes.NewFakeGetter(t))
+	})
+
 	t.Run("nil context", func(t *testing.T) {
-		_, _, err := fake.HandleStuff(nil, fake.NewFakeGetter(t))
-		check.ErrorNil(t, err)
+		t.Parallel()
+
+		fakeGetter := fakes.NewFakeGetter(t)
+
+		fakeGetter.On.Get("")
+
+		_, _, _ = fakes.HandleStuff(nil, fakeGetter) //nolint:go-staticcheck
 	})
 
 	t.Run("context cancelled", func(t *testing.T) {
-		ctx, cancel := context.WithCancel(context.Background())
+		t.Parallel()
+
+		fakeGetter := fakes.NewFakeGetter(t)
+
+		fakeGetter.On.Get("")
+
+		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
 
-		_, _, err := fake.HandleStuff(ctx, fake.NewFakeGetter(t))
+		_, _, err := fakes.HandleStuff(ctx, fakeGetter)
 		check.ErrorNil(t, err)
 	})
 
-	t.Run("missing expectations", func(t *testing.T) {
-		_, _, err := fake.HandleStuff(context.TODO(), fake.NewFakeGetter(t))
+	t.Run("argument mismatch", func(t *testing.T) {
+		t.Parallel()
+
+		fakeGetter := fakes.NewFakeGetter(t)
+
+		fakeGetter.On.Get("")
+
+		_, _, err := fakes.HandleStuff(t.Context(), fakeGetter)
 		check.ErrorNil(t, err)
 	})
 
 	t.Run("no return value for get", func(t *testing.T) {
-		fakeGetter := fake.NewFakeGetter(t)
+		t.Parallel()
 
-		fakeGetter.On.Get("")
+		fakeGetter := fakes.NewFakeGetter(t)
 
-		_, _, err := fake.HandleStuff(context.TODO(), fakeGetter)
+		fakeGetter.On.Get("testID")
+
+		_, _, err := fakes.HandleStuff(t.Context(), fakeGetter)
 		check.ErrorNil(t, err)
 	})
 
 	t.Run("no return value for get external", func(t *testing.T) {
-		fakeGetter := fake.NewFakeGetter(t)
+		t.Parallel()
 
-		fakeGetter.On.Get("").Return(fake.Object{}, nil)
-		fakeGetter.On.GetExternal(0)
+		fakeGetter := fakes.NewFakeGetter(t)
 
-		_, _, err := fake.HandleStuff(context.TODO(), fakeGetter)
+		fakeGetter.On.Get("testID").Return(fakes.Object{}, nil)
+		fakeGetter.On.GetExternal(1)
+
+		_, _, err := fakes.HandleStuff(t.Context(), fakeGetter)
 		check.ErrorNil(t, err)
 	})
 
 	t.Run("valid", func(t *testing.T) {
-		fakeGetter := fake.NewFakeGetter(t)
+		t.Parallel()
 
-		fakeGetter.On.Get("").Return(fake.Object{}, nil)
-		fakeGetter.On.GetExternal(0).Return(&external.External{}, nil)
+		fakeGetter := fakes.NewFakeGetter(t)
 
-		_, _, err := fake.HandleStuff(context.TODO(), fakeGetter)
+		fakeGetter.On.Get("testID").Return(fakes.Object{}, nil)
+		fakeGetter.On.GetExternal(1).Return(&external.External{}, nil)
+
+		_, _, err := fakes.HandleStuff(t.Context(), fakeGetter)
 		check.ErrorNil(t, err)
 	})
 }

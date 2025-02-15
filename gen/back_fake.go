@@ -1,4 +1,4 @@
-package fake
+package fakes
 
 import (
 	"testing"
@@ -29,16 +29,15 @@ func (f *fakeBack) Get() {
 	}
 	const methodName = "Get"
 	if f.On == nil || f.On.get == nil {
-		f.t.Fatalf("fake: '%s.%s': %s", getterName, methodName, fake.ErrMethodNotInitialized.Error())
+		f.t.Fatalf("fake: '%s.%s': %s", backName, methodName, fake.ErrMethodNotInitialized.Error())
 	}
 	index := f.On.getCounter
 	if index+1 > len(f.On.get) {
-		f.t.Fatalf("fake: '%s.%s': expectations missing: called '%d' time(s), '%d' expectation(s) registered", backName, methodName, index+1, len(f.On.get))
+		f.t.Fatalf("fake: '%s.%s': %s: called '%d' time(s), '%d' expectation(s) registered", backName, methodName, fake.ErrExpectationsMissing.Error(), index+1, len(f.On.get))
 	}
 	f.On.getCounter++
 	return
 }
-
 func (f *backExpect) Get() *backGet {
 	if f == nil {
 		return nil
@@ -47,4 +46,5 @@ func (f *backExpect) Get() *backGet {
 	return f.get[len(f.get)-1]
 }
 
-type backGet struct{}
+type backGet struct {
+}
